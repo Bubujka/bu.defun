@@ -5,14 +5,40 @@ require_once 'functions.php';
 def_printfer('h1', "<h1>%s</h1>\n");
 h1('Hello, ');
 h1('World!');
-# <h1>Hello, </h1>
-# <h1>World!</h1>
+// <h1>Hello, </h1>
+// <h1>World!</h1>
 
 def_printfer('puts', "%s\n");
 puts("text");
-# text
+// text
 
+//////////////////////////////////////////////////
 
+def_sprintfer('a', "<a href='%s'>%s</a>");
+def_sprintfer('img', "<img src='%s'>");
+
+defun('def_tag',function($name){
+	def_sprintfer($name, "<{$name}>%s</{$name}>\n");
+});
+
+foreach(array('p','div','html','head','body','title', 'h1') as $tag)
+	def_tag($tag);
+
+echo html(head(title('Hello, World!')).
+          body(div(h1('Hello, World!')).
+	       div(p("This is a page about world!").
+	           a("http://world.com", img("http://world.com/logo.jpg")))));
+/*
+  <html><head><title>Hello, World!</title>
+  </head>
+  <body><div><h1>Hello, World!</h1>
+  </div>
+  <div><p>This is a page about world!</p>
+  <a href='http://world.com'><img src='http://world.com/logo.jpg'></a></div>
+  </body>
+*/
+
+//////////////////////////////////////////////////
 
 defun('say', function ($what, $what2){
 	printf("ME: %s, %s\n", $what, $what2);
@@ -54,6 +80,7 @@ unwrap('say');
 say('one', 'two');
 //ME: one, two
 
+//////////////////////////////////////////////////
 
 def_memo('sum', function($one, $two){
 	echo "Summing: {$one} - {$two} \n";
@@ -63,27 +90,27 @@ def_memo('sum', function($one, $two){
 puts('Result: '.sum(1, 2));
 puts('Result: '.sum(1, 2));
 puts('Result: '.sum(2, 2));
-# Summing: 1 - 2 
-# Result: 3
-# Result: 3
-# Summing: 2 - 2 
-# Result: 4
-
+// Summing: 1 - 2
+// Result: 3
+// Result: 3
+// Summing: 2 - 2
+// Result: 4
 
 ///////////////////////////////////
+
 def_converter('id','object',function($i){
-		//return Model::find($i);
 		return (object)$i;
-});
+	});
 
 print_R(id_to_object(13));
-# stdClass Object
-# (
-#    [scalar] => 13
-# )
+/*
+ stdClass Object
+ (
+    [scalar] => 13
+ )
+*/
 
 def_converter('id','object',function($i){
-		//return Model::find($i);
 		return (object)$i;
 });
 
@@ -108,21 +135,3 @@ Array
 
 )
 */
-
-
-def_sprintfer('a', "<a href='%s'>%s</a>");
-def_sprintfer('img', "<img src='%s'>");
-
-defun('def_tag',function($name){
-	def_sprintfer($name, "<{$name}>%s</{$name}>");
-});
-
-foreach(array('p','div','html','head','body','title', 'h1') as $tag)
-	def_tag($tag);
-
-//////////////////////////////////////////////////
-
-echo html(head(title('Hello, World!')).
-          body(div(h1('Hello, World!')).
-	       div(p("This is a page about world!").
-	           a("http://world.com", img("http://world.com/logo.jpg")))));

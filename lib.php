@@ -7,20 +7,15 @@ class Call{
 	var $fn;
 	var $args = array();
 	function __invoke(){
-		if(func_num_args())
-			$args = func_get_args();
-		else
-			$args = $this->args;
-		return call_user_func_array($this->fn, $args);
+		return call_user_func_array($this->fn,
+					    func_num_args() ?  func_get_args() : $this->args);
 	}
 }
 
-
 function defun($name, $fn){
 	if(function_exists($name)){
-		if(!isset(Memo::$fns[$name])){
+		if(!isset(Memo::$fns[$name]))
 			throw new Exception('Function '.$name.' already exists and not a generic');
-		}
 	}else{
 		eval(
 		'function '.$name.'(){ '.
