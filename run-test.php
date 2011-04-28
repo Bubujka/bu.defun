@@ -45,3 +45,4 @@ puts('');
 puts("Correct: ".$correct);
 puts("Fail: ".$fail);
 puts("Total: ".$total);
+unlink('tmp.php');

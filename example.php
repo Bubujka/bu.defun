@@ -1,6 +1,5 @@
 <?php
-require_once 'lib.php';
-require_once 'functions.php';
+require_once 'load.php';
 
 def_printfer('h1', "<h1>%s</h1>\n");
 h1('Hello, ');

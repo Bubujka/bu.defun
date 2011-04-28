@@ -1,3 +1,3 @@
 <?php
-require_once 'lib.php';
-require_once 'functions.php';
+require_once 'lib/lib.php';
+require_once 'lib/functions.php';
