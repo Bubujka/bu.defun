@@ -1,6 +1,7 @@
 <?php
 class Memo{
 	static $fns = array();
+	static $wrappers = array();
 }
 
 class Call{
@@ -14,11 +15,14 @@ class Call{
 
 function defun($name, $fn){
 	if(function_exists($name)){
-		if(!isset(Memo::$fns[$name]))
-			throw new Exception('Function '.$name.' already exists and not a generic');
+		if(!in_array($name, Memo::$wrappers))
+			throw new Exception('Function '.$name.' already exists and it is not a wrapper');
 	}else{
+		Memo::$wrappers[] = $name;
 		eval(
 		'function '.$name.'(){ '.
+		'if(!isset(Memo::$fns["'.$name.'"]) or !Memo::$fns["'.$name.'"])'.
+		'	throw new Exception("Function '.$name.' haven`t body!");'.
 		'$fn = current(Memo::$fns["'.$name.'"]);'.
 		'$fn->args = func_get_args();'.
 		'return $fn();}');
