@@ -1,4 +1,24 @@
 <?php
+defun('undefun', function($name){
+	      array_pop(Memo::$fns[$name]);
+	      end(Memo::$fns[$name]);
+	});
+
+defun('funlet', function($fn){
+		$fns = Memo::$fns;
+		$return = $fn();
+		Memo::$fns = $fns;
+
+		return $return;
+	});
+
+defun('def_alias', function($orig, $dest){
+		defun($dest, function() use($orig){
+				$args = func_get_args();
+				return call_user_func_array($orig, $args);
+			});
+	});
+
 defun('def_wrap', function($name, $fn){
 		$old_fn = current(Memo::$fns[$name]);
 		defun($name,
@@ -9,11 +29,9 @@ defun('def_wrap', function($name, $fn){
 		      });
 	});
 
-defun('unwrap',
-      function($name){
-	      array_pop(Memo::$fns[$name]);
-	      end(Memo::$fns[$name]);
-      });
+
+def_alias('undefun', 'undef_wrap');
+
 
 defun('def_printfer', function($name, $tpl){
 	defun($name, function() use($tpl){
@@ -33,7 +51,7 @@ defun('def_sprintfer', function($name, $tpl){
 
 defun('def_memo', function($name, $fn){
 	defun($name, function() use($name, $fn){
-		static $data = array(); 
+		static $data = array();
 		$args = func_get_args();
 		$key = serialize($args);
 		if(!isset($data[$name][$key]))
@@ -42,10 +60,10 @@ defun('def_memo', function($name, $fn){
 	});
 });
 
-
 defun('def_converter', function($from, $to, $fn){
 	defun("{$from}_to_{$to}", $fn);
 	defun("{$from}s_to_{$to}s", function($array) use ($fn){
 		return array_map($fn, $array);
 	});
 });
+

@@ -68,15 +68,15 @@ def_wrap('say', function($call){
 say('one', 'two');
 // ME>>: _ONE_, _TWO_
 
-unwrap('say');
+undef_wrap('say');
 say('one', 'two');
 // ME>>: ONE, TWO
 
-unwrap('say');
+undef_wrap('say');
 say('one', 'two');
 // ME>>: one, two
 
-unwrap('say');
+undef_wrap('say');
 say('one', 'two');
 //ME: one, two
 
@@ -110,17 +110,8 @@ print_R(id_to_object(13));
  )
 */
 
-def_converter('id','object',function($i){
-		return (object)$i;
-});
-
-print_R(id_to_object(1));
 print_R(ids_to_objects(array(2,3)));
 /*
-stdClass Object
-(
-    [scalar] => 1
-)
 Array
 (
     [0] => stdClass Object
@@ -135,3 +126,60 @@ Array
 
 )
 */
+
+defun('bark', function(){ puts("Bark!");});
+bark();
+// Bark!
+
+defun('bark', function(){ puts("Bark-bark!");});
+bark();
+// Bark-bark!
+
+defun('bark', function(){ puts("Miaoooo!");});
+bark();
+// Miaoooo!
+
+undefun('bark');
+bark();
+// Bark-bark!
+
+undefun('bark');
+bark();
+// Bark!
+
+//////////////////////////////////////////////////
+
+defun('say_one', function(){
+		puts("Me: one");
+	});
+
+say_one();
+// Me: one
+
+defun('say_two', function(){
+		puts("Me: two");
+	});
+say_two();
+// Me: two
+
+def_alias('say_one', 'say_two');
+say_two();
+// Me: one
+
+
+////////////////////////////////////////
+
+def_printfer('test_let', "calling outside let \n");
+
+test_let();
+// calling outside let
+
+funlet(function(){
+		def_printfer('test_let', "calling inside let \n");
+		test_let();
+		// calling inside let
+	});
+
+test_let();
+// calling outside let
+
