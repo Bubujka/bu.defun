@@ -1,23 +1,6 @@
 <?php
 require_once 'load.php';
 
-class Optionable{
-	var $param = null;
-	function __construct($nm){
-		$this->param = $nm;
-	}
-}
-
-class Drum extends Optionable{}
-class Cymbal extends Optionable{}
-class DrumStick extends Optionable{}
-
-$drum = new Drum('<Drum #1>');
-$cymbal1 = new Cymbal('<Cymbal #1>');
-$cymbal2 = new Cymbal('<Cymbal #2>');
-$stick1 = new DrumStick('<Stick #1>');
-$stick2 = new DrumStick('<Stick #2>');
-
 defun('defgeneric', function($name){
 		Memo::$methods[$name] = array();
 		defun($name, function() use ($name){
@@ -48,6 +31,22 @@ defun('defomethod', function(){
 		Memo::$methods[$name][] = array($combinator, $fn);
 	});
 
+class Optionable{
+	var $param = null;
+	function __construct($nm){
+		$this->param = $nm;
+	}
+}
+
+class Drum extends Optionable{}
+class Cymbal extends Optionable{}
+class DrumStick extends Optionable{}
+
+$drum = new Drum('<Drum #1>');
+$cymbal1 = new Cymbal('<Cymbal #1>');
+$cymbal2 = new Cymbal('<Cymbal #2>');
+$stick1 = new DrumStick('<Stick #1>');
+$stick2 = new DrumStick('<Stick #2>');
 
 defun("beater", function($name){
 		return  function($o, $t) use($name){
