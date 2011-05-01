@@ -2,6 +2,7 @@
 class Memo{
 	static $fns = array();
 	static $wrappers = array();
+	static $methods = array();
 }
 
 class Call{
