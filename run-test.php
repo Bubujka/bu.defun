@@ -1,5 +1,5 @@
 #!/usr/bin/env php
-   <?php
+<?php
 require_once 'load.php';
 def_printfer("puts","%s\n");
 
