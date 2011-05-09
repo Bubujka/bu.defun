@@ -1,4 +1,5 @@
 <?php
+use bu\defun\Memo;
 defun('undefun', function($name){
 	      array_pop(Memo::$fns[$name]);
 	      end(Memo::$fns[$name]);
