@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 require_once 'load.php';
 
@@ -17,8 +18,8 @@ def_sprintfer('a', "<a href='%s'>%s</a>");
 def_sprintfer('img', "<img src='%s'>");
 
 defun('def_tag',function($name){
-	def_sprintfer($name, "<{$name}>%s</{$name}>\n");
-});
+		def_sprintfer($name, "<{$name}>%s</{$name}>\n");
+	});
 
 foreach(array('p','div','html','head','body','title', 'h1') as $tag)
 	def_tag($tag);
@@ -40,30 +41,30 @@ echo html(head(title('Hello, World!')).
 //////////////////////////////////////////////////
 
 defun('say', function ($what, $what2){
-	printf("ME: %s, %s\n", $what, $what2);
-});
+		printf("ME: %s, %s\n", $what, $what2);
+	});
 say('one','two');
 // ME: one, two
 
 defun('say', function ($what, $what2){
-	printf("ME>>: %s, %s\n", $what, $what2);
-});
+		printf("ME>>: %s, %s\n", $what, $what2);
+	});
 say('one','two');
 // ME>>: one, two
 
 def_wrap('say', function($call){
-	foreach($call->args as $k=>$v)
-		$call->args[$k] = strtoupper($v);
-	$call();
-});
+		foreach($call->args as $k=>$v)
+			$call->args[$k] = strtoupper($v);
+		$call();
+	});
 say('one','two');
 // ME>>: ONE, TWO
 
 def_wrap('say', function($call){
-	foreach($call->args as $k=>$v)
-		$call->args[$k] = '_'.$v.'_';
-	$call();
-});
+		foreach($call->args as $k=>$v)
+			$call->args[$k] = '_'.$v.'_';
+		$call();
+	});
 say('one', 'two');
 // ME>>: _ONE_, _TWO_
 
@@ -82,9 +83,9 @@ say('one', 'two');
 //////////////////////////////////////////////////
 
 def_memo('sum', function($one, $two){
-	echo "Summing: {$one} - {$two} \n";
-	return $one+$two;
-});
+		echo "Summing: {$one} - {$two} \n";
+		return $one+$two;
+	});
 
 puts('Result: '.sum(1, 2));
 puts('Result: '.sum(1, 2));
@@ -103,27 +104,27 @@ def_converter('id','object',function($i){
 
 print_R(id_to_object(13));
 /*
- stdClass Object
- (
-    [scalar] => 13
- )
+  stdClass Object
+  (
+  [scalar] => 13
+  )
 */
 
 print_R(ids_to_objects(array(2,3)));
 /*
-Array
-(
-    [0] => stdClass Object
-        (
-            [scalar] => 2
-        )
+  Array
+  (
+  [0] => stdClass Object
+  (
+  [scalar] => 2
+  )
 
-    [1] => stdClass Object
-        (
-            [scalar] => 3
-        )
+  [1] => stdClass Object
+  (
+  [scalar] => 3
+  )
 
-)
+  )
 */
 
 defun('bark', function(){ puts("Bark!");});
@@ -194,4 +195,12 @@ foo\bar\hello();
 def_ret('user_name', 'waserd');
 puts(user_name());
 // waserd
+
+////////////////////////////////////////
+# Testing args
+defun('test_args', function($o, $t){
+		puts(implode('-',args()));
+	});
+test_args(1,2);
+// 1-2
 
