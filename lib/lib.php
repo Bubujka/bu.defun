@@ -4,14 +4,19 @@ namespace bu\defun{
 		static $fns = array();
 		static $wrappers = array();
 		static $methods = array();
+		static $last_args = array();
 	}
 
 	class Call{
 		var $fn;
 		var $args = array();
 		function __invoke(){
-			return call_user_func_array($this->fn,
-						    func_num_args() ?  func_get_args() : $this->args);
+			$args = func_num_args() ?  func_get_args() : $this->args;
+			$old_args = Memo::$last_args;
+			Memo::$last_args = $args;
+			$r = call_user_func_array($this->fn, $args);
+			Memo::$last_args = $old_args;
+			return $r;
 		}
 	}
 	class BuDefunException extends \Exception{}
@@ -53,5 +58,8 @@ namespace{
 
 		Memo::$fns[$name][] = $call;
 		end(Memo::$fns[$name]);
+	}
+	function args(){
+		return Memo::$last_args;
 	}
 }
