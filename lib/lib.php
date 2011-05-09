@@ -23,14 +23,19 @@ namespace{
 				throw new Exception('Function '.$name.' already exists and it is not a wrapper');
 		}else{
 			Memo::$wrappers[] = $name;
-			eval(
-			'use bu\defun\Memo, bu\defun\Call;'.
-			'function '.$name.'(){ '.
-			'if(!isset(Memo::$fns["'.$name.'"]) or !Memo::$fns["'.$name.'"])'.
-			'	throw new Exception("Function '.$name.' haven`t body!");'.
-			'$fn = current(Memo::$fns["'.$name.'"]);'.
-			'$fn->args = func_get_args();'.
-			'return $fn();}');
+			$ns = '';
+			if(preg_match('@^(.*)\\\\([^\\\\]+)$@', $name, $m)){
+				$ns = 'namespace '.$m[1].';';
+				$name = $m[2];
+			}
+			eval($ns.
+			     'use bu\defun\Memo, bu\defun\Call;'.
+			     'function '.$name.'(){ '.
+			     'if(!isset(Memo::$fns["'.$name.'"]) or !Memo::$fns["'.$name.'"])'.
+			     '	throw new Exception("Function '.$name.' haven`t body!");'.
+			     '$fn = current(Memo::$fns["'.$name.'"]);'.
+			     '$fn->args = func_get_args();'.
+			     'return $fn();}');
 		}
 		$call = new Call;
 		$call->fn = $fn;
