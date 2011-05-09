@@ -30,9 +30,7 @@ defun('def_wrap', function($name, $fn){
 		      });
 	});
 
-
 def_alias('undefun', 'undef_wrap');
-
 
 defun('def_printfer', function($name, $tpl){
 	defun($name, function() use($tpl){
@@ -68,3 +66,9 @@ defun('def_converter', function($from, $to, $fn){
 	});
 });
 
+// Объявить функцию $name, которая просто вернёт $value.
+defun('def_ret', function($name, $value){
+		defun($name, function() use($value){
+				return $value;
+			});
+	});

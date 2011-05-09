@@ -188,3 +188,10 @@ test_let();
 defun('foo\bar\hello',function(){ echo "Hello, World!\n";});
 foo\bar\hello();
 // Hello, World!
+
+////////////////////////////////////////
+# Testing def_ret
+def_ret('user_name', 'waserd');
+puts(user_name());
+// waserd
+
