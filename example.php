@@ -182,3 +182,9 @@ funlet(function(){
 test_let();
 // calling outside let
 
+
+////////////////////////////////////////
+# using namespace
+defun('foo\bar\hello',function(){ echo "Hello, World!\n";});
+foo\bar\hello();
+// Hello, World!

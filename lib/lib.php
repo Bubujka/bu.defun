@@ -26,11 +26,15 @@ namespace{
 			$ns = '';
 			if(preg_match('@^(.*)\\\\([^\\\\]+)$@', $name, $m)){
 				$ns = 'namespace '.$m[1].';';
-				$name = $m[2];
+				$fn_name = $m[2];
+			}else{
+				$fn_name = $name;
 			}
+
+
 			eval($ns.
 			     'use bu\defun\Memo, bu\defun\Call;'.
-			     'function '.$name.'(){ '.
+			     'function '.$fn_name.'(){ '.
 			     'if(!isset(Memo::$fns["'.$name.'"]) or !Memo::$fns["'.$name.'"])'.
 			     '	throw new Exception("Function '.$name.' haven`t body!");'.
 			     '$fn = current(Memo::$fns["'.$name.'"]);'.
