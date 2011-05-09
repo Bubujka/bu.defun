@@ -14,13 +14,17 @@ namespace bu\defun{
 						    func_num_args() ?  func_get_args() : $this->args);
 		}
 	}
+	class BuDefunException extends \Exception{}
+	class CannotDefun extends BuDefunException{}
+	class FnNotDefined extends BuDefunException{}
+
 }
 namespace{
-	use bu\defun\Memo, bu\defun\Call;
+	use bu\defun\Memo, bu\defun\Call, bu\defun\CannotDefun;
 	function defun($name, $fn){
 		if(function_exists($name)){
 			if(!in_array($name, Memo::$wrappers))
-				throw new Exception('Function '.$name.' already exists and it is not a wrapper');
+				throw new CannotDefun('Function '.$name.' already exists and it is not a wrapper');
 		}else{
 			Memo::$wrappers[] = $name;
 			$ns = '';
@@ -33,10 +37,10 @@ namespace{
 
 
 			eval($ns.
-			     'use bu\defun\Memo, bu\defun\Call;'.
+			     'use bu\defun\Memo, bu\defun\Call, bu\defun\FnNotDefined;'.
 			     'function '.$fn_name.'(){ '.
 			     'if(!isset(Memo::$fns["'.$name.'"]) or !Memo::$fns["'.$name.'"])'.
-			     '	throw new Exception("Function '.$name.' haven`t body!");'.
+			     '	throw new FnNotDefined("Function '.$name.' haven`t body!b");'.
 			     '$fn = current(Memo::$fns["'.$name.'"]);'.
 			     '$fn->args = func_get_args();'.
 			     'return $fn();}');
