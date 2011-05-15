@@ -83,3 +83,15 @@ defun('def_text_inspector', function($fn){
 				return $r;
 			});
 	});
+
+defun('def_antonyms', function($true, $false, $fn){
+		defun($true, $fn);
+		defun($false, function() use($fn){
+				$r = call_user_func_array($fn, func_get_args());
+				if($r === true)
+					return false;
+				elseif($r === false)
+					return true;
+				return $r;
+			});
+	});
