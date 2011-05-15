@@ -72,4 +72,3 @@ defun('def_ret', function($name, $value){
 				return $value;
 			});
 	});
-
