@@ -51,7 +51,7 @@ def('say', function ($what, $what2){
 say('one','two');
 // ME>>: one, two
 
-def_wrap('say', function($call){
+def_wrapper('say', function($call){
 		foreach($call->args as $k=>$v)
 			$call->args[$k] = strtoupper($v);
 		$call();
@@ -59,7 +59,7 @@ def_wrap('say', function($call){
 say('one','two');
 // ME>>: ONE, TWO
 
-def_wrap('say', function($call){
+def_wrapper('say', function($call){
 		foreach($call->args as $k=>$v)
 			$call->args[$k] = '_'.$v.'_';
 		$call();
@@ -67,15 +67,15 @@ def_wrap('say', function($call){
 say('one', 'two');
 // ME>>: _ONE_, _TWO_
 
-undef_wrap('say');
+undef_wrapper('say');
 say('one', 'two');
 // ME>>: ONE, TWO
 
-undef_wrap('say');
+undef_wrapper('say');
 say('one', 'two');
 // ME>>: one, two
 
-undef_wrap('say');
+undef_wrapper('say');
 say('one', 'two');
 //ME: one, two
 

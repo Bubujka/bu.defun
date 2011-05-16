@@ -7,13 +7,13 @@ $wrapper = function($call){
 };
 def('say', function($i){ echo $i."\n"; });
 say(1);
-def_wrap('say', $wrapper);
+def_wrapper('say', $wrapper);
 say(1);
-def_wrap('say', $wrapper);
+def_wrapper('say', $wrapper);
 say(1);
-undef_wrap('say');
+undef_wrapper('say');
 say(1);
-undef_wrap('say');
+undef_wrapper('say');
 say(1);
 ?>
 ---
