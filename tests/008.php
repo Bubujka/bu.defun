@@ -1,8 +1,8 @@
 <?php
-// testing funlet
+// testing deflet
 def_printfer("say", "one\n");
 say();
-funlet(function(){
+deflet(function(){
 		def_printfer("say", "two\n");
 		say();
 	});

@@ -1,7 +1,7 @@
 <?php
 // testing FnNotDefined exception
 try{
-	funlet(function(){
+	deflet(function(){
 			def('hello', function(){});
 		});
 	hello();

@@ -5,7 +5,7 @@ def('undef', function($name){
 		end(Memo::$fns[$name]);
 	});
 
-def('funlet', function($fn){
+def('deflet', function($fn){
 		$fns = Memo::$fns;
 		$return = $fn();
 		Memo::$fns = $fns;

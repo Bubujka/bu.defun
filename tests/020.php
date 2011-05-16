@@ -1,6 +1,6 @@
 <?php
-// testing Fn redefining after funlet
-funlet(function(){
+// testing Fn redefining after deflet
+deflet(function(){
 		def('hello', function(){});
 	});
 def('hello', function(){ echo "worked"; });

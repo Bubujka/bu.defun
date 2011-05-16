@@ -173,7 +173,7 @@ def_printfer('test_let', "calling outside let \n");
 test_let();
 // calling outside let
 
-funlet(function(){
+deflet(function(){
 		def_printfer('test_let', "calling inside let \n");
 		test_let();
 		// calling inside let
