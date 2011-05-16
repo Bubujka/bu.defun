@@ -190,8 +190,8 @@ foo\bar\hello();
 // Hello, World!
 
 ////////////////////////////////////////
-# Testing def_ret
-def_ret('user_name', 'waserd');
+# Testing def_return
+def_return('user_name', 'waserd');
 puts(user_name());
 // waserd
 

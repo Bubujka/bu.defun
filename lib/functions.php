@@ -67,7 +67,7 @@ def('def_converter', function($from, $to, $fn){
 	});
 
 // Объявить функцию $name, которая просто вернёт $value.
-def('def_ret', function($name, $value){
+def('def_return', function($name, $value){
 		def($name, function() use($value){
 				return $value;
 			});
