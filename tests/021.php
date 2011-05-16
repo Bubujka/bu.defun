@@ -1,6 +1,6 @@
 <?php
 set_time_limit(1);
-defun('inc', function($i){
+def('inc', function($i){
 		echo "Increment {$i}\n";
 		return $i + 1;
 	});

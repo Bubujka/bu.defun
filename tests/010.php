@@ -5,7 +5,7 @@ $wrapper = function($call){
 	echo ">";
 	$call();
 };
-defun('say', function($i){ echo $i."\n"; });
+def('say', function($i){ echo $i."\n"; });
 say(1);
 def_wrap('say', $wrapper);
 say(1);

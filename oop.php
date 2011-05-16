@@ -1,9 +1,9 @@
 <?php
 require_once 'load.php';
 
-defun('defgeneric', function($name){
+def('defgeneric', function($name){
 		Memo::$methods[$name] = array();
-		defun($name, function() use ($name){
+		def($name, function() use ($name){
 				$args = func_get_args();
 				foreach(Memo::$methods[$name] as $t){
 					list($combinator, $fn) = $t;
@@ -14,7 +14,7 @@ defun('defgeneric', function($name){
 			});
 	});
 
-defun('defomethod', function(){
+def('defomethod', function(){
 		$args = func_get_args();
 		$name = array_shift($args);
 		$fn = array_pop($args);
@@ -48,7 +48,7 @@ $cymbal2 = new Cymbal('<Cymbal #2>');
 $stick1 = new DrumStick('<Stick #1>');
 $stick2 = new DrumStick('<Stick #2>');
 
-defun("beater", function($name){
+def("beater", function($name){
 		return  function($o, $t) use($name){
 			echo $name.": ".$o->param." with ".$t->param."\n";
 		};});

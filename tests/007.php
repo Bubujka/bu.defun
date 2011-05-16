@@ -1,10 +1,10 @@
 <?php
-// testing undefun
-defun('say', function(){ echo "one\n"; });
+// testing undef
+def('say', function(){ echo "one\n"; });
 say();
-defun('say', function(){ echo "two\n"; });
+def('say', function(){ echo "two\n"; });
 say();
-undefun('say');
+undef('say');
 say();
 ?>
 ---

@@ -2,10 +2,10 @@
 // testing FnNotDefined exception
 try{
 	funlet(function(){
-			defun('hello', function(){});
+			def('hello', function(){});
 		});
 	hello();
-}catch(bu\defun\FnNotDefined $e){
+}catch(bu\def\FnNotDefined $e){
 	echo 'catched!';
 }
 ?>

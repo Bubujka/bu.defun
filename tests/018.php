@@ -1,8 +1,8 @@
 <?php
-// testing CannotDefun exception
+// testing CannotDef exception
 try{
-	defun('print_r', function(){});
-}catch(bu\defun\CannotDefun $e){
+	def('print_r', function(){});
+}catch(bu\def\CannotDef $e){
 	echo 'catched!';
 }
 ?>

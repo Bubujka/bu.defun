@@ -10,7 +10,7 @@ def_antonyms('is_boy', 'is_girl',
 		     return null;
 	     });
 
-defun('t', function($v){
+def('t', function($v){
 		if(is_null($v))
 			$text = "null";
 		elseif($v === false)

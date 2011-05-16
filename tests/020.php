@@ -1,9 +1,9 @@
 <?php
 // testing Fn redefining after funlet
 funlet(function(){
-		defun('hello', function(){});
+		def('hello', function(){});
 	});
-defun('hello', function(){ echo "worked"; });
+def('hello', function(){ echo "worked"; });
 hello();
 ?>
 ---

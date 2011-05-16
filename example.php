@@ -16,9 +16,9 @@ puts("text");
 def_sprintfer('a', "<a href='%s'>%s</a>");
 def_sprintfer('img', "<img src='%s'>");
 
-defun('def_tag',function($name){
-	def_sprintfer($name, "<{$name}>%s</{$name}>\n");
-});
+def('def_tag',function($name){
+		def_sprintfer($name, "<{$name}>%s</{$name}>\n");
+	});
 
 foreach(array('p','div','html','head','body','title', 'h1') as $tag)
 	def_tag($tag);
@@ -39,31 +39,31 @@ echo html(head(title('Hello, World!')).
 
 //////////////////////////////////////////////////
 
-defun('say', function ($what, $what2){
-	printf("ME: %s, %s\n", $what, $what2);
-});
+def('say', function ($what, $what2){
+		printf("ME: %s, %s\n", $what, $what2);
+	});
 say('one','two');
 // ME: one, two
 
-defun('say', function ($what, $what2){
-	printf("ME>>: %s, %s\n", $what, $what2);
-});
+def('say', function ($what, $what2){
+		printf("ME>>: %s, %s\n", $what, $what2);
+	});
 say('one','two');
 // ME>>: one, two
 
 def_wrap('say', function($call){
-	foreach($call->args as $k=>$v)
-		$call->args[$k] = strtoupper($v);
-	$call();
-});
+		foreach($call->args as $k=>$v)
+			$call->args[$k] = strtoupper($v);
+		$call();
+	});
 say('one','two');
 // ME>>: ONE, TWO
 
 def_wrap('say', function($call){
-	foreach($call->args as $k=>$v)
-		$call->args[$k] = '_'.$v.'_';
-	$call();
-});
+		foreach($call->args as $k=>$v)
+			$call->args[$k] = '_'.$v.'_';
+		$call();
+	});
 say('one', 'two');
 // ME>>: _ONE_, _TWO_
 
@@ -82,9 +82,9 @@ say('one', 'two');
 //////////////////////////////////////////////////
 
 def_memo('sum', function($one, $two){
-	echo "Summing: {$one} - {$two} \n";
-	return $one+$two;
-});
+		echo "Summing: {$one} - {$two} \n";
+		return $one+$two;
+	});
 
 puts('Result: '.sum(1, 2));
 puts('Result: '.sum(1, 2));
@@ -103,59 +103,59 @@ def_converter('id','object',function($i){
 
 print_R(id_to_object(13));
 /*
- stdClass Object
- (
-    [scalar] => 13
- )
+  stdClass Object
+  (
+  [scalar] => 13
+  )
 */
 
 print_R(ids_to_objects(array(2,3)));
 /*
-Array
-(
-    [0] => stdClass Object
-        (
-            [scalar] => 2
-        )
+  Array
+  (
+  [0] => stdClass Object
+  (
+  [scalar] => 2
+  )
 
-    [1] => stdClass Object
-        (
-            [scalar] => 3
-        )
+  [1] => stdClass Object
+  (
+  [scalar] => 3
+  )
 
-)
+  )
 */
 
-defun('bark', function(){ puts("Bark!");});
+def('bark', function(){ puts("Bark!");});
 bark();
 // Bark!
 
-defun('bark', function(){ puts("Bark-bark!");});
+def('bark', function(){ puts("Bark-bark!");});
 bark();
 // Bark-bark!
 
-defun('bark', function(){ puts("Miaoooo!");});
+def('bark', function(){ puts("Miaoooo!");});
 bark();
 // Miaoooo!
 
-undefun('bark');
+undef('bark');
 bark();
 // Bark-bark!
 
-undefun('bark');
+undef('bark');
 bark();
 // Bark!
 
 //////////////////////////////////////////////////
 
-defun('say_one', function(){
+def('say_one', function(){
 		puts("Me: one");
 	});
 
 say_one();
 // Me: one
 
-defun('say_two', function(){
+def('say_two', function(){
 		puts("Me: two");
 	});
 say_two();
@@ -185,7 +185,7 @@ test_let();
 
 ////////////////////////////////////////
 # using namespace
-defun('foo\bar\hello',function(){ echo "Hello, World!\n";});
+def('foo\bar\hello',function(){ echo "Hello, World!\n";});
 foo\bar\hello();
 // Hello, World!
 

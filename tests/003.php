@@ -1,11 +1,11 @@
 <?php
 //testing redefining
-defun('name', function(){ 
+def('name', function(){ 
 	echo "Waserd"; 
 });
 name();
 echo "\n";
-defun('name', function(){ 
+def('name', function(){ 
 	echo "Bubujka"; 
 });
 name();

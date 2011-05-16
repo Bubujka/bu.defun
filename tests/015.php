@@ -1,6 +1,6 @@
 <?php
-// testing namespace defun
-defun('foo\bar\baz\hello', function(){ echo "Hello!"; });
+// testing namespace def
+def('foo\bar\baz\hello', function(){ echo "Hello!"; });
 foo\bar\baz\hello();
 ?>
 ---

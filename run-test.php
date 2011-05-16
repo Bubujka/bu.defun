@@ -3,20 +3,20 @@
 require_once 'load.php';
 def_printfer("puts","%s\n");
 
-defun('test_files', function(){
+def('test_files', function(){
 	return glob('tests/*.php');
 });
 
-defun('read_test', function($file){
+def('read_test', function($file){
 	return explode("---\n", file_get_contents($file));
 });
 
-defun('eval_output', function($src){
+def('eval_output', function($src){
 	file_put_contents('tmp.php', $src);
 	return `php tmp.php`;
 });
 
-defun('add_error', function($file, $eval_out, $result){
+def('add_error', function($file, $eval_out, $result){
 	puts("Error in file: {$file}");
 	puts($eval_out);
 	puts('------------------');

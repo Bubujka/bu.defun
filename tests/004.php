@@ -1,6 +1,6 @@
 <?php
 // testing return value
-defun('ret', function(){
+def('ret', function(){
 	return 100;
 });
 echo ret();

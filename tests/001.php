@@ -1,6 +1,6 @@
 <?php
 // testing simple define
-defun('hello', function(){ echo "Hello!"; });
+def('hello', function(){ echo "Hello!"; });
 hello();
 ?>
 ---
