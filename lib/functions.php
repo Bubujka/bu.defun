@@ -95,3 +95,17 @@ def('def_antonyms', function($true, $false, $fn){
 				return $r;
 			});
 	});
+
+def('_catch', function($what, $fn){
+		try{
+			$fn();
+		}catch(bu\def\Signal $e){
+			if($e->what == $what)
+				return;
+			throw $e;
+		}
+	});
+
+def('_throw', function($what){
+		throw new bu\def\Signal($what);
+	});

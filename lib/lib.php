@@ -14,6 +14,13 @@ namespace bu\def{
 						    func_num_args() ?  func_get_args() : $this->args);
 		}
 	}
+	class Signal extends \Exception{
+		var $what;
+		function __construct($what){
+			$this->what = $what;
+		}
+	}
+
 	class BuDefException extends \Exception{}
 	class CannotDef extends BuDefException{}
 	class FnNotDefined extends BuDefException{}
