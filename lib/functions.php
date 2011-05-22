@@ -109,3 +109,27 @@ def('_catch', function($what, $fn){
 def('_throw', function($what){
 		throw new bu\def\Signal($what);
 	});
+
+def('def_state_fns', function($positive, $negative,
+			      $setter, $getter){
+	    def($positive, function() use($setter, $getter){
+			    $return = $getter();
+			    if(func_num_args()){
+				    $arg = func_get_arg(0);
+				    if($arg != $return)
+					    $setter($arg);
+			    }
+			    return $return;
+		    });
+	    def($negative, function() use($setter, $getter){
+			    $return = !$getter();
+			    if(func_num_args()){
+				    $arg = func_get_arg(0);
+				    if($arg != $return)
+					    $setter(!$arg);
+			    }
+			    return $return;
+		    });
+
+
+	});
