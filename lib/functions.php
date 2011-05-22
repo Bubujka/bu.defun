@@ -130,6 +130,4 @@ def('def_state_fns', function($positive, $negative,
 			    }
 			    return $return;
 		    });
-
-
 	});
