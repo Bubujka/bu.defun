@@ -41,7 +41,6 @@ foreach(test_dirs() as $dir){
 		$total++;
 		list($src, $result) = read_test($file);
 		$result = trim($result);
-
 		$eval_out = trim(eval_output($prefix.$src.$suffix));
 		if($eval_out == $result){
 			$correct++;

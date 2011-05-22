@@ -131,3 +131,14 @@ def('def_state_fns', function($positive, $negative,
 			    return $return;
 		    });
 	});
+
+def('import_ns', function($ns){
+		$fns = get_defined_functions();
+		$fns = $fns['user'];
+		foreach($fns as $fn){
+			if(strstr($fn, $ns) !== false){
+				$fn_name = end(explode('\\', $fn));
+				def_alias($fn, $fn_name);
+			}
+		}
+	});
