@@ -4,6 +4,7 @@ namespace bu\def{
 		static $fns = array();
 		static $wrappers = array();
 		static $methods = array();
+		static $catchers = array();
 	}
 
 	class Call{
@@ -24,6 +25,7 @@ namespace bu\def{
 	class BuDefException extends \Exception{}
 	class CannotDef extends BuDefException{}
 	class FnNotDefined extends BuDefException{}
+	class UncatchedSignalException extends BuDefException{}
 
 }
 namespace{

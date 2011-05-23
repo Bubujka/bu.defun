@@ -142,3 +142,25 @@ def('import_ns', function($ns){
 			}
 		}
 	});
+
+def('catcher', function($nm, $fn){
+		Memo::$catchers[$nm] = $fn;
+	});
+
+def('noise', function($nm){
+		if(isset(Memo::$catchers[$nm])){
+			$args = func_get_args();
+			array_shift($args);
+			return call_user_func_array(Memo::$catchers[$nm], $args);
+		}
+	});
+
+def('signal', function($nm){
+		if(isset(Memo::$catchers[$nm])){
+			$args = func_get_args();
+			array_shift($args);
+			return call_user_func_array(Memo::$catchers[$nm], $args);
+		}else{
+			throw new bu\def\UncatchedSignalException("Uncatched signal '$nm'");
+		}
+	});
