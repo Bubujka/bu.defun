@@ -6,6 +6,7 @@ namespace bu\def{
 		static $methods = array();
 		static $catchers = array();
 		static $modules = array();
+		static $prefix = "";
 	}
 
 	class Module{
@@ -41,6 +42,7 @@ namespace bu\def{
 namespace{
 	use bu\def\Memo, bu\def\Call, bu\def\CannotDef;
 	function def($name, $fn){
+		$name = Memo::$prefix.$name;
 		if(strstr($name, '::') !== false){
 			list($class_nm, $fn_nm) = explode('::', $name);
 			if(!class_exists($class_nm)){

@@ -169,3 +169,10 @@ def('signal', function($nm){
 			throw new bu\def\UncatchedSignalException("Uncatched signal '$nm'");
 		}
 	});
+
+def('module', function($nm, $block){
+		$prefix = Memo::$prefix;
+		Memo::$prefix = $nm.'::';
+		$block();
+		Memo::$prefix = $prefix;
+	});
