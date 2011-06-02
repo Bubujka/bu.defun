@@ -143,6 +143,11 @@ def('import_ns', function($ns){
 		}
 	});
 
+def('import', function($class_nm){
+		foreach($class_nm::$fns as $name=>$fn)
+			def($name, $fn);
+	});
+
 def('catcher', function($nm, $fn){
 		Memo::$catchers[$nm] = $fn;
 	});

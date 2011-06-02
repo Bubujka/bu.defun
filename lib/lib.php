@@ -5,6 +5,15 @@ namespace bu\def{
 		static $wrappers = array();
 		static $methods = array();
 		static $catchers = array();
+		static $modules = array();
+	}
+
+	class Module{
+		static $fns = array();
+		static function __callStatic($nm, $args){
+			if(isset(static::$fns[$nm]))
+				return call_user_func_array(static::$fns[$nm], $args);
+		}
 	}
 
 	class Call{
@@ -15,6 +24,7 @@ namespace bu\def{
 						    func_num_args() ?  func_get_args() : $this->args);
 		}
 	}
+
 	class Signal extends \Exception{
 		var $what;
 		function __construct($what){
@@ -31,6 +41,15 @@ namespace bu\def{
 namespace{
 	use bu\def\Memo, bu\def\Call, bu\def\CannotDef;
 	function def($name, $fn){
+		if(strstr($name, '::') !== false){
+			list($class_nm, $fn_nm) = explode('::', $name);
+			if(!class_exists($class_nm)){
+				eval("class $class_nm extends \bu\def\Module{}");
+			}
+			$class_nm::$fns[$fn_nm] = $fn;
+			return;
+		}
+
 		if(function_exists($name)){
 			if(!in_array($name, Memo::$wrappers))
 				throw new CannotDef('Function '.$name.' already exists and it is not a wrapper');
