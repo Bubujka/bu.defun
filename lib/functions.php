@@ -180,7 +180,6 @@ def('module', function($nm, $block){
 def('ns', function($nm, $block){
 		$prefix = Memo::$prefix;
 		Memo::$prefix = $nm."\\";
-		Memo::$debug = true;
 		$block();
 		Memo::$prefix = $prefix;
 	});
