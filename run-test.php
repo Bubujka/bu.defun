@@ -33,6 +33,10 @@ $total = 0;
 $fail = 0;
 foreach(test_dirs() as $dir){
 	$prefix = ""; $suffix = "";
+	if(file_exists($dir.'prerequisite'))
+		if(trim(eval_output(file_get_contents($dir.'prerequisite'))) != 'ok')
+			continue;
+
 	if(file_exists($dir.'prefix'))
 		$prefix = file_get_contents($dir.'prefix');
 	if(file_exists($dir.'suffix'))
