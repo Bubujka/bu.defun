@@ -184,3 +184,22 @@ def('ns', function($nm, $block){
 		Memo::$prefix = $prefix;
 	});
 
+def_memo('bu\def\memcached', function(){
+			$r = new Memcached;
+			$r->addServer('localhost', 11211);
+			return $r;
+	});
+
+def('def_md', function($nm, $timeout, $fn){
+		def($nm, function() use($nm, $timeout, $fn){
+				$args = func_get_args();
+				$key = '-bu-defun-'.$nm.'-'.serialize($args);
+				$m = bu\def\memcached();
+				$data = $m->get($key);
+				if($m->getResultCode() == Memcached::RES_SUCCESS)
+					return $data;
+				$data = call_user_func_array($fn, $args);
+				$m->set($key, $data, $timeout);
+				return $data;
+			});
+	});
