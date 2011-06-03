@@ -6,6 +6,7 @@ namespace bu\def{
 		static $methods = array();
 		static $catchers = array();
 		static $modules = array();
+		static $debug = false;
 		static $prefix = "";
 	}
 
@@ -43,6 +44,8 @@ namespace{
 	use bu\def\Memo, bu\def\Call, bu\def\CannotDef;
 	function def($name, $fn){
 		$name = Memo::$prefix.$name;
+
+
 		if(strstr($name, '::') !== false){
 			list($class_nm, $fn_nm) = explode('::', $name);
 			if(!class_exists($class_nm)){
@@ -65,13 +68,12 @@ namespace{
 				$fn_name = $name;
 			}
 
-
 			eval($ns.
 			     'use bu\def\Memo, bu\def\Call, bu\def\FnNotDefined;'.
 			     'function '.$fn_name.'(){ '.
-			     'if(!isset(Memo::$fns["'.$name.'"]) or !Memo::$fns["'.$name.'"])'.
-			     '	throw new FnNotDefined("Function '.$name.' haven`t body!b");'.
-			     '$fn = current(Memo::$fns["'.$name.'"]);'.
+			     'if(!isset(Memo::$fns[\''.$name.'\']) or !Memo::$fns[\''.$name.'\'])'.
+			     '	throw new FnNotDefined(\'Function '.$name.' haven`t body!\');'.
+			     '$fn = current(Memo::$fns[\''.$name.'\']);'.
 			     '$fn->args = func_get_args();'.
 			     'return $fn();}');
 		}
