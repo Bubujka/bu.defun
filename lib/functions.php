@@ -203,3 +203,17 @@ def('def_md', function($nm, $timeout, $fn){
 				return $data;
 			});
 	});
+
+def('def_accessor', function($name, $defaul = null){
+		def($name, function() use($defaul){
+				static $state, $first_run = true;
+				if($first_run){
+					$state = $defaul;
+					$first_run = false;
+				}
+				$return = $state;
+				if(func_num_args())
+					$state = func_get_arg(0);
+				return $return;
+			});
+	});
