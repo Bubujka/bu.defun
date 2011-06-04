@@ -217,3 +217,15 @@ def('def_accessor', function($name, $defaul = null){
 				return $return;
 			});
 	});
+
+def('def_constructor', function($name){
+		$keys = func_get_args();
+		array_shift($keys);
+		def($name, function() use($keys){
+				$return = array();
+				$values = func_get_args();
+				foreach($values as $k=>$v)
+					$return[$keys[$k]] = $v;
+				return $return;
+			});
+	});
