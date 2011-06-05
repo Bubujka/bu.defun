@@ -28,6 +28,12 @@ def('test_files', function($dir){
 		return glob($dir.'*.php');
 	});
 
+module('Color', function(){
+		def_printfer('reset', chr(27)."[0m");
+		def_printfer('green', chr(27)."[0;32m");
+		def_printfer('red', chr(27)."[0;31m");
+	});
+
 $correct = 0;
 $total = 0;
 $fail = 0;
@@ -56,8 +62,13 @@ foreach(test_dirs() as $dir){
 		}
 	}
 }
+if($fail)
+	Color::red();
+else
+	Color::green();
 puts('');
 puts("Correct: ".$correct);
 puts("Fail: ".$fail);
 puts("Total: ".$total);
+Color::reset();
 unlink('tmp.php');
