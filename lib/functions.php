@@ -190,10 +190,14 @@ def_memo('bu\def\memcached', function(){
 			return $r;
 	});
 
-def('def_md', function($nm, $timeout, $fn){
-		def($nm, function() use($nm, $timeout, $fn){
+def('def_md', function($nm, $timeout, $fn, $key_fn = null){
+		def($nm, function() use($nm, $timeout, $fn, $key_fn){
 				$args = func_get_args();
-				$key = '-bu-defun-'.$nm.'-'.serialize($args);
+				if(!is_null($key_fn))
+					$key = $key_fn($nm, $args);
+				else
+					$key = '-bu-defun-'.$nm.'-'.serialize($args);
+
 				$m = bu\def\memcached();
 				$data = $m->get($key);
 				if($m->getResultCode() == Memcached::RES_SUCCESS)
