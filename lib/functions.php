@@ -196,7 +196,7 @@ def('def_md', function($nm, $timeout, $fn, $key_fn = null){
 				if(!is_null($key_fn))
 					$key = $key_fn($nm, $args);
 				else
-					$key = '-bu-defun-'.$nm.'-'.serialize($args);
+					$key = '-bu-defun-'.$nm.'-'.md5(serialize($args));
 
 				$m = bu\def\memcached();
 				$data = $m->get($key);
