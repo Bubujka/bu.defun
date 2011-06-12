@@ -3,6 +3,10 @@
 require_once 'load.php';
 def_printfer("puts","%s\n");
 
+class Memo{
+	static $errors = array();
+}
+
 def('test_dirs', function(){
 		return glob('tests/*/');
 	});
@@ -17,11 +21,23 @@ def('eval_output', function($src){
 	});
 
 def('add_error', function($file, $eval_out, $result){
+		Memo::$errors[] = array('file'=>$file,
+					'eval_out'=>$eval_out,
+					'result'=>$result);
+	});
+
+def('print_error', function($file, $eval_out, $result){
 		puts("Error in file: {$file}");
 		puts($eval_out);
 		puts('------------------');
 		puts($result);
 		puts('');
+	});
+
+def('print_all_errors', function(){
+		puts("\n");
+		foreach(Memo::$errors as $v)
+			print_error($v['file'], $v['eval_out'], $v['result']);
 	});
 
 def('test_files', function($dir){
@@ -40,8 +56,10 @@ $fail = 0;
 foreach(test_dirs() as $dir){
 	$prefix = ""; $suffix = "";
 	if(file_exists($dir.'prerequisite'))
-		if(trim(eval_output(file_get_contents($dir.'prerequisite'))) != 'ok')
+		if(trim(eval_output(file_get_contents($dir.'prerequisite'))) != 'ok'){
+			echo str_repeat('s', count(test_files($dir)));
 			continue;
+		}
 
 	if(file_exists($dir.'prefix'))
 		$prefix = file_get_contents($dir.'prefix');
@@ -58,15 +76,18 @@ foreach(test_dirs() as $dir){
 		}else{
 			add_error($file, $eval_out, $result);
 			$fail++;
-			echo '!';
+			echo 'e';
 		}
 	}
 }
+
+print_all_errors();
+
 if($fail)
 	Color::red();
 else
 	Color::green();
-puts('');
+
 puts("Correct: ".$correct);
 puts("Fail: ".$fail);
 puts("Total: ".$total);
