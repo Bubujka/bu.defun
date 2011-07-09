@@ -5,6 +5,10 @@ php.
 
 --------------
 
+Примеры того что можно сделать с помощью bu.defun: http://defun.bubujka.org/doc.html
+
+--------------
+
 Чтобы подключить bu.defun пропишите в своём проекте:
 require_once 'lib/bu.defun/load.php';
 
