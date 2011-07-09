@@ -1,4 +1,5 @@
 <?php
+// import_ns - импортирует функции в глобальный нэймспэйс из другого.
 namespace{
 	require_once "load.php";
 }

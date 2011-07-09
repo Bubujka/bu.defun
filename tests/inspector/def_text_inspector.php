@@ -1,4 +1,6 @@
 <?php
+// def_text_inspector - оборачивает функцию, так что можно следить за её
+// вызовом, переданными аргументами и возвращаемыми значениями
 set_time_limit(1);
 def('inc', function($i){
 		echo "Increment {$i}\n";
