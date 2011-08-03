@@ -233,3 +233,9 @@ def('def_constructor', function($name){
 				return $return;
 			});
 	});
+
+def('def_matcher', function($name, $pattern){
+		def($name, function($v) use($pattern){
+				return preg_match($pattern, $v);
+			});
+	});
