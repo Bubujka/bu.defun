@@ -246,5 +246,8 @@ def('def_matcher', function($name, $pattern){
 	});
 
 def('getfn', function($name){
-		return current(Memo::$fns[$name]);
+		if(isset(Memo::$fns[$name]) and
+		   Memo::$fns[$name])
+			return current(Memo::$fns[$name]);
+		throw new bu\def\FnNotDefined("Function with name: $name not defined!");
 	});
