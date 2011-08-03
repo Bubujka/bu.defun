@@ -244,3 +244,7 @@ def('def_matcher', function($name, $pattern){
 				return preg_match($pattern, $v);
 			});
 	});
+
+def('getfn', function($name){
+		return current(Memo::$fns[$name]);
+	});

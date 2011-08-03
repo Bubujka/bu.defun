@@ -5,3 +5,6 @@ test:
 
 doc:
 	./build-doc
+prod:
+	git push
+	update-defun-bubujka-org.sh
