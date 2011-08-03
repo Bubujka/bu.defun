@@ -1,6 +1,11 @@
 <?php
 use bu\def\Memo;
-def('undef', function($name){
+def('undef', function($name, $absolute = false){
+		if($absolute){
+			unset(Memo::$fns[$name]);
+			return;
+		}
+
 		array_pop(Memo::$fns[$name]);
 		end(Memo::$fns[$name]);
 	});
