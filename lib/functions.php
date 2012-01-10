@@ -244,13 +244,18 @@ def('defmd', function($nm, $fn, $timeout = 300, $key_fn = null){
                         $key = $key_fn($nm, $args);
                 else
                         $key = '-bu-defun-'.(string)bu\def\memcached_prefix().'-'.md5($nm.'-'.serialize($args));
+                if(isset(bu\def\Memo::$memcached_static_cache[$key]))
+                        return bu\def\Memo::$memcached_static_cache[$key];
 
                 $m = bu\def\memcached();
                 $data = $m->get($key);
-                if($m->getResultCode() == Memcached::RES_SUCCESS)
+                if($m->getResultCode() == Memcached::RES_SUCCESS){
+                        bu\def\Memo::$memcached_static_cache[$key] = $data;
                         return $data;
+                }
                 $data = call_user_func_array($fn, $args);
                 $m->set($key, $data, $timeout);
+                bu\def\Memo::$memcached_static_cache[$key] = $data;
                 return $data;
         });
 });

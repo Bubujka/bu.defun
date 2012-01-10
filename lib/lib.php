@@ -8,6 +8,7 @@ namespace bu\def{
 		static $modules = array();
 		static $debug = false;
 		static $prefix = "";
+                static $memcached_static_cache = array();
 	}
 
 	class Module{

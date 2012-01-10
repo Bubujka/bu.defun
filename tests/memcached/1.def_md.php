@@ -6,7 +6,7 @@ defmd('sum', function($a, $b){
 	});
 echo sum(1,2)."\n";
 echo sum(1,2)."\n";
-flush_md();
+flush_all();
 echo sum(1,2)."\n";
 echo sum(1,2)."\n";
 ?>

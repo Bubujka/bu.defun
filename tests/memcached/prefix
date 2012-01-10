@@ -1,9 +1,13 @@
 <?
 require_once 'load.php';
+def('flush_all', function(){
+        flush_md();
+        bu\def\Memo::$memcached_static_cache = array();
+});
 def('flush_md', function(){
-		$_m= new Memcached;
-		$_m->addServer('localhost', 11211) or die ("Could not connect");
-		$_m->flush();
-	});
-flush_md()
+        $_m= new Memcached;
+        $_m->addServer('localhost', 11211) or die ("Could not connect");
+        $_m->flush();
+});
+flush_all()
 ?>

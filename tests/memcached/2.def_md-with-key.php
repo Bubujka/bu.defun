@@ -12,7 +12,7 @@ echo sum(1,2)."\n";
 echo sum(1,2)."\n";
 echo bu\def\memcached()->get('sum:1-2')."\n";
 
-flush_md();
+flush_all();
 echo bu\def\memcached()->get('sum:1-2')."\n";
 echo sum(1,2)."\n";
 echo sum(1,2)."\n";

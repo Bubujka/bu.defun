@@ -1,1 +1,1 @@
-<? flush_md(); ?>
+<? flush_all(); ?>
