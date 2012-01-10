@@ -195,7 +195,7 @@ def_memo('bu\def\memcached', function(){
 			return $r;
 	});
 
-def('def_md', function($nm, $timeout, $fn, $key_fn = null){
+def('defmd', function($nm, $fn, $timeout = 300, $key_fn = null){
 		def($nm, function() use($nm, $timeout, $fn, $key_fn){
 				$args = func_get_args();
 				if(!is_null($key_fn))

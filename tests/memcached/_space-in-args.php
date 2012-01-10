@@ -1,5 +1,5 @@
 <?php
-def_md('test_md', 5, function($a){
+defmd('test_md', function($a){
 		echo '.';
 		return $a."\n";
 	});

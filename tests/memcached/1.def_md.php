@@ -1,5 +1,5 @@
 <?php
-def_md('sum', 5, function($a, $b){
+defmd('sum', function($a, $b){
 		echo '.';
 		return $a+$b;
 	});

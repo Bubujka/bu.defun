@@ -1,12 +1,8 @@
 <?php
 // Четвёртым аргументом для def_md можно передат функцию, которая будет
 // создавать ключ для кэширования результатов
-def_md('sum',
-       5,
-       function($a, $b){
-	       echo ".";
-	       return $a+$b;
-       },
+defmd('sum', function($a, $b){ echo "."; return $a+$b; },
+       5,     
        function($fname, $args){
 	       return "{$fname}:".implode('-', $args);
        });
