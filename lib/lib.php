@@ -39,9 +39,6 @@ namespace bu\def{
 	class FnNotDefined extends BuDefException{}
 	class UncatchedSignalException extends BuDefException{}
 
-}
-namespace{
-	use bu\def\Memo, bu\def\Call, bu\def\CannotDef;
 	function def($name, $fn){
 		$name = Memo::$prefix.$name;
 
@@ -86,4 +83,7 @@ namespace{
 		Memo::$fns[$name][] = $call;
 		end(Memo::$fns[$name]);
 	}
+        def('def', function($name, $fn){
+                def($name, $fn);
+        });
 }
