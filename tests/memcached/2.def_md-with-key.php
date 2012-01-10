@@ -1,6 +1,7 @@
 <?php
 // Четвёртым аргументом для def_md можно передат функцию, которая будет
 // создавать ключ для кэширования результатов
+bu\def\memcached_prefix('bu.def.tests');
 defmd('sum', function($a, $b){ echo "."; return $a+$b; },
        5,     
        function($fname, $args){

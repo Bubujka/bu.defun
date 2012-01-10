@@ -189,29 +189,6 @@ def('ns', function($nm, $block){
 		Memo::$prefix = $prefix;
 	});
 
-def_memo('bu\def\memcached', function(){
-			$r = new Memcached;
-			$r->addServer('localhost', 11211);
-			return $r;
-	});
-
-def('defmd', function($nm, $fn, $timeout = 300, $key_fn = null){
-		def($nm, function() use($nm, $timeout, $fn, $key_fn){
-				$args = func_get_args();
-				if(!is_null($key_fn))
-					$key = $key_fn($nm, $args);
-				else
-					$key = '-bu-defun-'.md5($nm.'-'.serialize($args));
-
-				$m = bu\def\memcached();
-				$data = $m->get($key);
-				if($m->getResultCode() == Memcached::RES_SUCCESS)
-					return $data;
-				$data = call_user_func_array($fn, $args);
-				$m->set($key, $data, $timeout);
-				return $data;
-			});
-	});
 
 def('def_accessor', function($name, $defaul = null){
 		def($name, function() use($defaul){
@@ -251,3 +228,29 @@ def('getfn', function($name){
 			return current(Memo::$fns[$name]);
 		throw new bu\def\FnNotDefined("Function with name: $name not defined!");
 	});
+
+def_memo('bu\def\memcached', function(){
+			$r = new Memcached;
+			$r->addServer('localhost', 11211);
+			return $r;
+	});
+def_accessor('bu\def\memcached_prefix', null);
+def('defmd', function($nm, $fn, $timeout = 300, $key_fn = null){
+        if(is_null(bu\def\memcached_prefix()))
+                throw new bu\def\ConfigException('Prefix for memcached not set! Use bu\def\memcached_prefix()');
+        def($nm, function() use($nm, $timeout, $fn, $key_fn){
+                $args = func_get_args();
+                if(!is_null($key_fn))
+                        $key = $key_fn($nm, $args);
+                else
+                        $key = '-bu-defun-'.(string)bu\def\memcached_prefix().'-'.md5($nm.'-'.serialize($args));
+
+                $m = bu\def\memcached();
+                $data = $m->get($key);
+                if($m->getResultCode() == Memcached::RES_SUCCESS)
+                        return $data;
+                $data = call_user_func_array($fn, $args);
+                $m->set($key, $data, $timeout);
+                return $data;
+        });
+});

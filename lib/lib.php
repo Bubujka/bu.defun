@@ -38,6 +38,7 @@ namespace bu\def{
 	class CannotDef extends BuDefException{}
 	class FnNotDefined extends BuDefException{}
 	class UncatchedSignalException extends BuDefException{}
+	class ConfigException extends BuDefException{}
 
 	function def($name, $fn){
 		$name = Memo::$prefix.$name;

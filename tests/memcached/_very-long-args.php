@@ -1,4 +1,5 @@
 <?php
+bu\def\memcached_prefix('bu.def.tests');
 defmd('test_md', function($a){
 		echo '.';
 		return $a."\n";

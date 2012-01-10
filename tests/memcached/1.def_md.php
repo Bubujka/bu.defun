@@ -1,4 +1,5 @@
 <?php
+bu\def\memcached_prefix('bu.def.tests');
 defmd('sum', function($a, $b){
 		echo '.';
 		return $a+$b;
