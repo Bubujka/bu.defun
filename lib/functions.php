@@ -54,7 +54,7 @@ def('def_sprintfer', function($name, $tpl){
 	});
 
 def('def_memo', function($name, $fn){
-		def($name, function() use($name, $fn){
+		return def($name, function() use($name, $fn){
 				static $data = array();
 				$args = func_get_args();
 				$key = serialize($args);

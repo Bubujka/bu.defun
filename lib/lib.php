@@ -82,8 +82,9 @@ namespace bu\def{
 
 		Memo::$fns[$name][] = $call;
 		end(Memo::$fns[$name]);
+                return $fn;
 	}
         def('def', function($name, $fn){
-                def($name, $fn);
+                return def($name, $fn);
         });
 }
