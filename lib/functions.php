@@ -234,6 +234,7 @@ def_memo('bu\def\memcached', function(){
 			$r->addServer('localhost', 11211);
 			return $r;
 	});
+
 def_accessor('bu\def\memcached_prefix', null);
 def('defmd', function($nm, $fn, $timeout = 300, $key_fn = null){
         if(is_null(bu\def\memcached_prefix()))
@@ -259,3 +260,60 @@ def('defmd', function($nm, $fn, $timeout = 300, $key_fn = null){
                 return $data;
         });
 });
+
+
+def_accessor('bu\def\fc_path', null);
+
+def('bu\def\fc_check_path', function(){
+        if(is_null(bu\def\fc_path()))
+                throw new bu\def\ConfigException('Path for caching not set! Use bu\def\file_cache_path()');
+});
+
+def('bu\def\fc_key_path', function($k){
+        return bu\def\fc_path() . '/' . $k;
+});
+
+def('bu\def\fc_is_valid', function($key){
+        $pth = bu\def\fc_key_path($key);
+        if(!file_exists($pth))
+                return false;
+
+        $t = bu\def\fc_raw_read($key);
+        if(($t['timeout'] + $t['create_time']) < time())
+                return false;
+        return true;
+});
+
+def('bu\def\fc_raw_read', function($key){
+        return unserialize(file_get_contents(bu\def\fc_key_path($key)));
+});
+
+def('bu\def\fc_read', function($key){
+        $t = bu\def\fc_raw_read($key);
+        return $t['data'];
+});
+
+def('bu\def\fc_write', function($key, $value, $timeout){
+        $t = array('data' => $value, 'timeout' => $timeout, 'create_time' => time());
+        file_put_contents(bu\def\fc_key_path($key), serialize($t));
+});
+
+def('deffc', function($nm, $fn, $timeout = 300, $key_fn = null){
+        bu\def\fc_check_path();
+        def_memo($nm, function() use($nm, $timeout, $fn, $key_fn){
+                $args = func_get_args();
+                if(!is_null($key_fn))
+                        $key = $key_fn($nm, $args);
+                else
+                        $key = $nm.'-'.md5(serialize($args));
+
+                if(bu\def\fc_is_valid($key))
+                        return bu\def\fc_read($pth);
+
+                $data = call_user_func_array($fn, $args);
+                bu\def\fc_write($key, $data, $timeout);
+                return $data;
+        });
+});
+
+
