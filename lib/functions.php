@@ -308,7 +308,7 @@ def('deffc', function($nm, $fn, $timeout = 300, $key_fn = null){
                         $key = $nm.'-'.md5(serialize($args));
 
                 if(bu\def\fc_is_valid($key))
-                        return bu\def\fc_read($pth);
+                        return bu\def\fc_read($key);
 
                 $data = call_user_func_array($fn, $args);
                 bu\def\fc_write($key, $data, $timeout);
