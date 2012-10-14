@@ -1,0 +1,22 @@
+{
+  "name": "bubujka/def",
+  "type": "library",
+  "description": "Function defining and redefining",
+  "keywords": ["function", "metaprogramming", "DSL"],
+  "homepage": "http://github.com/Bubujka/bu.defun",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Aleksej Kamynin",
+      "email": "zendzirou@gmail.com",
+      "homepage": "http://bubujka.org",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.0"
+  },
+  "autoload": {
+    "files": ["load.php"]
+  }
+}
