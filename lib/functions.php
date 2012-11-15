@@ -25,7 +25,7 @@ def('def_alias', function($orig, $dest){
 			});
 	});
 
-def('def_wrapper', function($name, $fn){
+def('with_wrapper', function($name, $fn){
 		$old_fn = current(Memo::$fns[$name]);
 		def($name,
 		    function() use($old_fn, $fn){
@@ -35,7 +35,7 @@ def('def_wrapper', function($name, $fn){
 		    });
 	});
 
-def_alias('undef', 'undef_wrapper');
+def_alias('undef', 'unwrap');
 
 def('def_printfer', function($name, $tpl){
 		def($name, function() use($tpl){
@@ -79,7 +79,7 @@ def('def_return', function($name, $value){
 	});
 
 def('def_text_inspector', function($fn){
-		def_wrapper($fn, function($call) use($fn){
+		with_wrapper($fn, function($call) use($fn){
 				echo ">> Calling '{$fn}' function with arguments:\n";
 				foreach($call->args as $arg)
 					echo ">> - {$arg}\n";
