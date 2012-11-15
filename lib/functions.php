@@ -18,6 +18,20 @@ def('deflet', function($fn){
 		return $return;
 	});
 
+def('def_accessor', function($name, $defaul = null){
+		def($name, function() use($defaul){
+				static $state, $first_run = true;
+				if($first_run){
+					$state = $defaul;
+					$first_run = false;
+				}
+				$return = $state;
+				if(func_num_args())
+					$state = func_get_arg(0);
+				return $return;
+			});
+	});
+
 def('def_alias', function($orig, $dest){
 		def($dest, function() use($orig){
 				$args = func_get_args();
@@ -25,15 +39,12 @@ def('def_alias', function($orig, $dest){
 			});
 	});
 
-def('with_wrapper', function($name, $fn){
-		$old_fn = current(Memo::$fns[$name]);
-		def($name,
-		    function() use($old_fn, $fn){
-			    $args = func_get_args();
-			    $old_fn->args = $args;
-			    return $fn($old_fn);
-		    });
-	});
+def_accessor('wrappers', '');
+def('def_wrapper', function($name, $fn){
+  Memo::$named_wrappers[$name] = $fn;
+});
+
+def_alias('bu\def\_with_wrapper', 'with_wrapper');
 
 def_alias('undef', 'unwrap');
 
@@ -142,7 +153,8 @@ def('import_ns', function($ns){
 		$fns = $fns['user'];
 		foreach($fns as $fn){
 			if(strstr($fn, $ns) !== false){
-				$fn_name = end(explode('\\', $fn));
+        $t = explode('\\', $fn);
+				$fn_name = end($t);
 				def_alias($fn, $fn_name);
 			}
 		}
@@ -189,20 +201,6 @@ def('ns', function($nm, $block){
 		Memo::$prefix = $prefix;
 	});
 
-
-def('def_accessor', function($name, $defaul = null){
-		def($name, function() use($defaul){
-				static $state, $first_run = true;
-				if($first_run){
-					$state = $defaul;
-					$first_run = false;
-				}
-				$return = $state;
-				if(func_num_args())
-					$state = func_get_arg(0);
-				return $return;
-			});
-	});
 
 def('def_constructor', function($name){
 		$keys = func_get_args();
