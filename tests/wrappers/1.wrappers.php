@@ -1,16 +1,16 @@
 <?php
 // Врапперы можно объявить заранее и оборачивать функции прямо группой.
-def_wrapper('user', function($fn){
+def_wrp('user', function($fn){
   echo "Checking for user\n";
   return $fn();
 });
 
-def_wrapper('admin', function($fn){
+def_wrp('admin', function($fn){
   echo "Checking for admin\n";
   return $fn();
 });
 
-def_wrapper('uppercase', function($fn){
+def_wrp('uppercase', function($fn){
   return strtoupper($fn());
 });
 

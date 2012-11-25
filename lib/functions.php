@@ -40,7 +40,13 @@ def('def_alias', function($orig, $dest){
 	});
 
 def_accessor('wrappers', '');
-def('def_wrapper', function($name, $fn){
+def('wrp', function(){
+  $t = wrappers();
+  $t .= ' '.implode(' ', func_get_args());
+  wrappers(trim($t));
+});
+
+def('def_wrp', function($name, $fn){
   Memo::$named_wrappers[$name] = $fn;
 });
 
