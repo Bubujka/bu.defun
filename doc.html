@@ -1,0 +1,797 @@
+<html><head><title>Bu.defun doc</title><meta http-equiv='Content-Type' content='text/html; charset=utf-8' /></head><body>
+<link rel="stylesheet" href="default.css"><script src="highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script><hr><h1>complex</h1>
+<h2>html-dsl.php</h2>
+<pre><code class='php'>&lt;?php
+
+def_sprintfer('a', &quot;&lt;a href='%s'&gt;%s&lt;/a&gt;&quot;);
+def_sprintfer('img', &quot;&lt;img src='%s'&gt;&quot;);
+
+def('def_tag',function($name){
+		def_sprintfer($name, &quot;&lt;{$name}&gt;%s&lt;/{$name}&gt;\n&quot;);
+	});
+
+foreach(array('p','div','html','head','body','title', 'h1') as $tag)
+	def_tag($tag);
+
+echo html(head(title('Hello, World!')).
+          body(div(h1('Hello, World!')).
+	       div(p(&quot;This is a page about world!&quot;).
+	           a(&quot;http://world.com&quot;, img(&quot;http://world.com/logo.jpg&quot;)))));
+---
+&lt;html&gt;&lt;head&gt;&lt;title&gt;Hello, World!&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;&lt;div&gt;&lt;h1&gt;Hello, World!&lt;/h1&gt;
+&lt;/div&gt;
+&lt;div&gt;&lt;p&gt;This is a page about world!&lt;/p&gt;
+&lt;a href='http://world.com'&gt;&lt;img src='http://world.com/logo.jpg'&gt;&lt;/a&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<hr><h1>core</h1>
+<h2>1.simple-define.php</h2>
+<pre><code class='php'>&lt;?php
+// Простой пример, как определить функцию с помощью bu.defun
+def('hello', function(){ echo &quot;Hello!&quot;; });
+hello();
+?&gt;
+---
+Hello!
+</code></pre>
+<h2>2.undef.php</h2>
+<pre><code class='php'>&lt;?php
+// С помощью undef можно разопределить функцию.
+def('say', function(){ echo &quot;one\n&quot;; });
+say();
+def('say', function(){ echo &quot;two\n&quot;; });
+say();
+undef('say');
+say();
+?&gt;
+---
+one
+two
+one
+</code></pre>
+<h2>3.redefine.php</h2>
+<pre><code class='php'>&lt;?php
+// С помощью bu.defun можно переопределять функции: 
+def('name', function(){ 
+	echo &quot;Waserd&quot;; 
+});
+name();
+echo &quot;\n&quot;;
+def('name', function(){ 
+	echo &quot;Bubujka&quot;; 
+});
+name();
+?&gt;
+---
+Waserd
+Bubujka
+</code></pre>
+<h2>4.absolute-undef.php</h2>
+<pre><code class='php'>&lt;?php
+// При использовании undef - удаляется только последняя функция.
+// Чтобы удалить всё - надо передать true вторым аргументом
+for($i = 1; $i&lt;5; $i++)
+	def_printfer('say', &quot;$i\n&quot;);
+
+say();
+undef('say');
+say();
+undef('say', true);
+try{
+	say();
+}catch(Exception $e){
+	echo &quot;Catched!&quot;;
+}
+---
+4
+3
+Catched!
+</code></pre>
+<h2>5.redefine-def.php</h2>
+<pre><code class='php'>&lt;?php
+// Возможно переопределить функцию def.
+def('def', function($name, $fn){
+        echo &quot;Defining {$name}\n&quot;;
+        bu\def\def($name, $fn);
+});
+
+def('hello', function(){
+        echo &quot;Hello, world!\n&quot;;
+});
+hello();
+---
+Defining hello
+Hello, world!
+</code></pre>
+<h2>5.return-closure-on-def.php</h2>
+<pre><code class='php'>&lt;?php
+// При объявлении функций - возвращается замыкание. 
+$fn = def('up', function($str){
+        return strtoupper($str);
+});
+
+echo up('hello, world').&quot;\n&quot;;
+echo $fn('world, hello');
+---
+HELLO, WORLD
+WORLD, HELLO
+</code></pre>
+<hr><h1>def_accessor</h1>
+<h2>1.def_accessor.php</h2>
+<pre><code class='php'>&lt;?php
+// def_accessor создаёт функцию, которая хранит в себе определённое значение и
+// возвращает его при вызове. Ей можно передать в качестве аргумента новое
+// значение
+def_accessor('user');
+if(is_null(user()))
+	echo &quot;null\n&quot;;
+user('waserd');
+echo user();
+---
+null
+waserd
+</code></pre>
+<h2>2.def_accessor_with_default_value.php</h2>
+<pre><code class='php'>&lt;?php
+// Второй аргумент в функции - значение по умолчанию. 
+def_accessor('user', 'waserd');
+echo user().&quot;\n&quot;;
+user('bubujka');
+echo user();
+---
+waserd
+bubujka
+</code></pre>
+<h2>3.return_old_value_on_set.php</h2>
+<pre><code class='php'>&lt;?php
+// При установке нового значения - функция вернёт старое
+def_accessor('user', 'waserd');
+echo user('bubujka').&quot;\n&quot;;
+echo user();
+---
+waserd
+bubujka
+</code></pre>
+<hr><h1>def_matcher</h1>
+<h2>def_matcher.php</h2>
+<pre><code class='php'>&lt;?php
+// def_matcher - объявляет функцию, которая сопоставляет свой аргумент с
+// регулярным выражением
+echo (int)function_exists('is_az');
+
+def_matcher('is_az', '/^[a-z]+$/');
+
+echo (int)function_exists('is_az');
+foreach(array('', '1', 'a2', 'E', '_') as $v)
+	echo (int)is_az($v);
+
+foreach(array('a', 'qwerty') as $v)
+	echo (int)is_az($v);
+
+---
+010000011
+</code></pre>
+<hr><h1>def_wrapper</h1>
+<h2>1.def_wrapper-undef_wrapper.php</h2>
+<pre><code class='php'>&lt;?php
+// При оборачивании функций с помощью def_wrapper - их можно всегда можно
+// развернуть обратно
+$wrapper = function($call){
+	$call-&gt;args[0]++;
+	echo &quot;&gt;&quot;;
+	$call();
+};
+def('say', function($i){ echo $i.&quot;\n&quot;; });
+say(1);
+def_wrapper('say', $wrapper);
+say(1);
+def_wrapper('say', $wrapper);
+say(1);
+undef_wrapper('say');
+say(1);
+undef_wrapper('say');
+say(1);
+?&gt;
+---
+1
+&gt;2
+&gt;&gt;3
+&gt;2
+1
+
+</code></pre>
+<h2>2.argument-overwrite-in-def_wrapper.php</h2>
+<pre><code class='php'>&lt;?php
+// Оборачивая функцию с помощью def_wrapper возможно переопределять
+// передаваемые аргументы
+def('m2', function($i){ return $i * 2; });
+def_wrapper('m2', function($call){ return $call(3); });
+echo m2(2);
+?&gt;
+---
+6
+</code></pre>
+<hr><h1>deflet</h1>
+<h2>deflet.php</h2>
+<pre><code class='php'>&lt;?php
+// С помощью deflet можно выполнить участок кода, так что
+// определённые/переопределённые функции не будут видны за его пределами
+def_printfer(&quot;say&quot;, &quot;one\n&quot;);
+say();
+deflet(function(){
+		def_printfer(&quot;say&quot;, &quot;two\n&quot;);
+		say();
+	});
+say();
+?&gt;
+---
+one
+two
+one
+</code></pre>
+<hr><h1>functions</h1>
+<h2>def-state-fns.php</h2>
+<pre><code class='php'>&lt;?php
+// def_state_fns принимает 4 аргумента: 
+// - название для функции возвращающей нормальное значение
+// - ................................. инвертированное значение
+// - функция, которая устанавливает значение
+// - ................ возвращает значение
+// Ниже рассмотрен пример авторизации пользователя, с хранением значения в
+// в сессии:
+session_start();
+def_state_fns('is_user', 'is_guest',
+	      function($v){
+		      $_SESSION['is_user'] = $v;
+	      },
+	      function(){
+		      return isset($_SESSION['is_user']) ? $_SESSION['is_user'] : false;
+	      });
+
+$pr = function(){
+	$tf = function($v){ echo ($v ? 'true' : 'false').&quot;\n&quot;;};
+	$tf(is_user());
+	$tf(is_guest());
+};
+//default state
+$pr();
+
+//inverse state
+is_user(true);
+$pr();
+
+//set over is_guest();
+is_guest(true);
+$pr();
+
+?&gt;
+---
+false
+true
+true
+false
+false
+true
+</code></pre>
+<h2>def_alias.php</h2>
+<pre><code class='php'>&lt;?php
+// def_alias - создаёт алиас для функции. 
+def('one', function(){ echo 1; });
+def_alias('one', 'two');
+one();
+two();
+?&gt;
+---
+11
+</code></pre>
+<h2>def_antonyms.php</h2>
+<pre><code class='php'>&lt;?php
+// def_antonyms - создаёт 2 функции, которые инверсируют булевые значения,
+// оставляя все остальные без изменений.
+def_antonyms('is_boy', 'is_girl',
+	     function($name){
+		     if($name == 'alexey')
+			     return true;
+		     if($name == 'lena')
+			     return false;
+		     if($name == 'string')
+			     return 'string';
+		     return null;
+	     });
+
+def('t', function($v){
+		if(is_null($v))
+			$text = &quot;null&quot;;
+		elseif($v === false)
+			$text = &quot;false&quot;;
+		elseif($v === true)
+			$text = &quot;true&quot;;
+		else
+			$text = $v;
+		echo $text.&quot;\n&quot;;
+	});
+
+t(is_boy('alexey'));
+t(is_boy('lena'));
+t(is_boy('fido'));
+t(is_boy('string'));
+
+t(is_girl('alexey'));
+t(is_girl('lena'));
+t(is_girl('fido'));
+t(is_girl('string'));
+?&gt;
+---
+true
+false
+null
+string
+false
+true
+null
+string
+</code></pre>
+<h2>def_constructor.php</h2>
+<pre><code class='php'>&lt;?php
+// def_constructor принимает в качестве первого аргумента имя создаваемой
+// функции. Функция будет конструировать массивы получая лишь значения для
+// полей.
+def_constructor('mk_user', 'name', 'age');
+$one = mk_user('alex', 21);
+$two = mk_user('sasha', 28);
+foreach(array($one,$two) as $u){
+	foreach($u as $k=&gt;$v)
+		echo $k.&quot;: &quot;.$v.&quot;\n&quot;;
+	echo &quot;-\n&quot;;
+}
+---
+name: alex
+age: 21
+-
+name: sasha
+age: 28
+-
+</code></pre>
+<h2>def_converter.php</h2>
+<pre><code class='php'>&lt;?php
+// def_converter служит для создания преобразующих функций. Она создаёт 2
+// функции: к примеру down_to_up - для преобразования 1 аргумента, и
+// downs_to_ups для преобразования массива аргументов.
+def_converter('down', 'up', function($s){return strtoupper($s);});
+echo down_to_up('hello').&quot;\n&quot;;
+foreach(downs_to_ups(array('wor', 'ld')) as $v)
+	echo $v.&quot;\n&quot;;
+?&gt;
+---
+HELLO
+WOR
+LD
+
+</code></pre>
+<h2>def_printfer.php</h2>
+<pre><code class='php'>&lt;?php
+// def_printfer принимает название функции которую надо создать и шаблон.
+// Привызове она будет использовать шаблон как первый аргумент для printf.
+def_printfer('h1', '&lt;h1&gt;%s&lt;/h1&gt;');
+h1('hello!');
+?&gt;
+---
+&lt;h1&gt;hello!&lt;/h1&gt;
+</code></pre>
+<h2>def_return.php</h2>
+<pre><code class='php'>&lt;?php
+// def_return создаёт функцию, которая просто возвращает определённое
+// значение.
+def_return('user_name', 'waserd');
+echo user_name();
+?&gt;
+---
+waserd
+</code></pre>
+<h2>def_sprintfer.php</h2>
+<pre><code class='php'>&lt;?php
+// def_sprintfer - делает тоже что и def_printfer, но используя функцию sprintf
+def_sprintfer('h1', '&lt;h1&gt;%s&lt;/h1&gt;');
+$v = h1('hello!');
+echo &quot;&gt;&quot;.$v.&quot;&lt;&quot;;
+?&gt;
+---
+&gt;&lt;h1&gt;hello!&lt;/h1&gt;&lt;
+</code></pre>
+<hr><h1>getfn</h1>
+<h2>getfn.php</h2>
+<pre><code class='php'>&lt;?php
+// Объявленную через bu.defun функцию всегда можно получить как
+// замыкание с помощью getfn
+def_printfer('say', &quot;Hello!\n&quot;);
+$fn = getfn('say');
+$fn();
+echo &quot;\n&quot;;
+
+// Проверим как будет реботать при переопределении
+def_printfer('say', &quot;Hello #2!\n&quot;);
+$fn2 = getfn('say');
+$fn();
+$fn2();
+echo &quot;\n&quot;;
+
+// А если ещё и разопределить функцию?..
+undef('say');
+$fn3 = getfn('say');
+$fn();
+$fn2();
+$fn3();
+---
+Hello!
+
+Hello!
+Hello #2!
+
+Hello!
+Hello #2!
+Hello!
+</code></pre>
+<hr><h1>import</h1>
+<h2>import_ns.php</h2>
+<pre><code class='php'>&lt;?php
+// import_ns - импортирует функции в глобальный нэймспэйс из другого.
+namespace{
+	require_once &quot;load.php&quot;;
+}
+namespace foo\bar\baz{
+	function one(){ echo 1; }
+	function two(){ echo 2; }
+	function three(){ echo 3; }
+}
+namespace{
+	import_ns('foo\bar\baz');
+	one();
+	two();
+	three();
+}
+?&gt;
+---
+123
+</code></pre>
+<hr><h1>inspector</h1>
+<h2>def_text_inspector.php</h2>
+<pre><code class='php'>&lt;?php
+// def_text_inspector - оборачивает функцию, так что можно следить за её
+// вызовом, переданными аргументами и возвращаемыми значениями
+set_time_limit(1);
+def('inc', function($i){
+		echo &quot;Increment {$i}\n&quot;;
+		return $i + 1;
+	});
+
+def_text_inspector('inc');
+echo inc(3, 'hello');
+?&gt;
+---
+&gt;&gt; Calling 'inc' function with arguments:
+&gt;&gt; - 3
+&gt;&gt; - hello
+Increment 3
+&gt;&gt; return value is '4'
+4
+</code></pre>
+<hr><h1>memcached</h1>
+<h2>1.def_md.php</h2>
+<pre><code class='php'>&lt;?php
+bu\def\memcached_prefix('bu.def.tests');
+defmd('sum', function($a, $b){
+		echo '.';
+		return $a+$b;
+	});
+echo sum(1,2).&quot;\n&quot;;
+echo sum(1,2).&quot;\n&quot;;
+flush_all();
+echo sum(1,2).&quot;\n&quot;;
+echo sum(1,2).&quot;\n&quot;;
+?&gt;
+---
+.3
+3
+.3
+3
+</code></pre>
+<h2>2.def_md-with-key.php</h2>
+<pre><code class='php'>&lt;?php
+// Четвёртым аргументом для def_md можно передат функцию, которая будет
+// создавать ключ для кэширования результатов
+bu\def\memcached_prefix('bu.def.tests');
+defmd('sum', function($a, $b){ echo &quot;.&quot;; return $a+$b; },
+       5,     
+       function($fname, $args){
+	       return &quot;{$fname}:&quot;.implode('-', $args);
+       });
+
+echo sum(1,2).&quot;\n&quot;;
+echo sum(1,2).&quot;\n&quot;;
+echo bu\def\memcached()-&gt;get('sum:1-2').&quot;\n&quot;;
+
+flush_all();
+echo bu\def\memcached()-&gt;get('sum:1-2').&quot;\n&quot;;
+echo sum(1,2).&quot;\n&quot;;
+echo sum(1,2).&quot;\n&quot;;
+?&gt;
+---
+.3
+3
+3
+
+.3
+3
+</code></pre>
+<h2>3.defmd-different-prefixes.php</h2>
+<pre><code class='php'>&lt;?php
+bu\def\memcached_prefix('bu.def.tests');
+defmd('sum', function($a, $b){
+		echo '.';
+		return $a+$b;
+	});
+echo sum(1,2).&quot;\n&quot;;
+echo sum(1,2).&quot;\n&quot;;
+echo sum(2,2).&quot;\n&quot;;
+bu\def\memcached_prefix('bu.def.tests2');
+echo sum(1,2).&quot;\n&quot;;
+echo sum(1,2).&quot;\n&quot;;
+echo sum(2,2).&quot;\n&quot;;
+bu\def\memcached_prefix('bu.def.tests');
+echo sum(1,2).&quot;\n&quot;;
+echo sum(2,2).&quot;\n&quot;;
+?&gt;
+---
+.3
+3
+.4
+.3
+3
+.4
+3
+4
+</code></pre>
+<h2>4.static-cache-in-defmd.php</h2>
+<pre><code class='php'>&lt;?php
+// defmd сохраняет все результаты в bu\def\Memo::$memcached_static_cache
+// Это чтобы лишний раз не обращаться к memcached
+bu\def\memcached_prefix('bu.def.tests');
+defmd('test_md', function($r){
+        echo '.';
+        return ($r * 2).&quot;\n&quot;;
+});
+echo test_md(1);
+echo test_md(1);
+echo test_md(2);
+flush_md();
+echo test_md(1);
+echo test_md(2);
+flush_all();
+echo test_md(1);
+echo test_md(1);
+echo test_md(2);
+?&gt;
+---
+.2
+2
+.4
+2
+4
+.2
+2
+.4
+</code></pre>
+<hr><h1>memo</h1>
+<h2>1.def_memo.php</h2>
+<pre><code class='php'>&lt;?php
+// def_memo создаёт функцию, которая хранит все результаты вычислений.
+// http://en.wikipedia.org/wiki/Memoization
+def_memo('sum', function($a, $b){
+		echo '.';
+		return $a+$b;
+	});
+echo sum(1,2).&quot;\n&quot;;
+echo sum(1,3).&quot;\n&quot;;
+echo sum(1,2).&quot;\n&quot;;
+echo sum(2,1);
+?&gt;
+---
+.3
+.4
+3
+.3
+</code></pre>
+<h2>2.def_memo_for_singleton.php</h2>
+<pre><code class='php'>&lt;?php
+// def_memo может использоваться вместе с объектами
+class DB{
+	static $count = 0;
+	function __construct(){
+		self::$count++;
+	}
+	function count(){
+		echo self::$count;
+	}
+}
+
+def_memo('db', function(){
+		return new DB;
+	});
+
+db()-&gt;count();
+db()-&gt;count();
+db()-&gt;count();
+---
+111
+</code></pre>
+<h2>3.def_memo_return_closure.php</h2>
+<pre><code class='php'>&lt;?php
+// def_memo возвращает замыкание. его можно использовать по своему усмотрению.
+$v = def_memo('sum', function($a, $b){
+		echo '.';
+		return $a+$b;
+	});
+echo sum(1,2).&quot;\n&quot;;
+echo sum(1,3).&quot;\n&quot;;
+echo sum(1,2).&quot;\n&quot;;
+echo sum(2,1).&quot;\n&quot;;
+
+echo $v(4,5).&quot;\n&quot;;
+echo $v(1,2).&quot;\n&quot;; // использует ту же память что и sum()?
+echo $v(4,5).&quot;\n&quot;;
+?&gt;
+---
+.3
+.4
+3
+.3
+.9
+3
+9
+</code></pre>
+<hr><h1>modules</h1>
+<h2>1.def.php</h2>
+<pre><code class='php'>&lt;?php
+// Используя def возможно создавать статические функции внутри классов. Классы
+// не должны быт объявленны ранее.
+// Синтаксически это похоже на модули в ruby. 
+def(&quot;hello::world&quot;, function($what){
+		echo &quot;Hello, {$what}!&quot;;
+	});
+
+hello::world('waserd');
+---
+Hello, waserd!
+</code></pre>
+<h2>2.import.php</h2>
+<pre><code class='php'>&lt;?php
+// С помощью import возможно загрузить функции в глобальное пространство.
+def(&quot;foo::one&quot;, function(){echo 1;});
+def(&quot;foo::two&quot;, function(){echo 2;});
+def(&quot;foo::three&quot;, function(){echo 3;});
+foo::one();
+foo::two();
+foo::three();
+echo &quot;\n&quot;;
+import(&quot;foo&quot;);
+one();
+two();
+three();
+---
+123
+123
+</code></pre>
+<h2>3.module_def.php</h2>
+<pre><code class='php'>&lt;?php
+// Если надо определить несколько функций внутри модуля, то это удобнее сделать
+// с помощью функции module.
+module('foo', function(){
+		def('one', function(){echo 1;});
+		def('two', function(){echo 2;});
+		def('three', function(){echo 3;});
+		def_printfer('hello', 'Hello, %s');
+	});
+
+foo::one();
+foo::two();
+foo::three();
+foo::hello('waserd');
+---
+123Hello, waserd
+</code></pre>
+<hr><h1>ns</h1>
+<h2>1.def.php</h2>
+<pre><code class='php'>&lt;?php
+// Используя обратный слэш можно создавать функции внутри другого нэймспэйса
+def('foo\bar\baz\hello', function(){ echo &quot;Hello!&quot;; });
+foo\bar\baz\hello();
+?&gt;
+---
+Hello!
+</code></pre>
+<h2>2.ns_def.php</h2>
+<pre><code class='php'>&lt;?php
+// Для создания нескольких функций в другом нэймспэйсе - стоит использовать
+// функцию ns().
+ns('foo\bar\baz', function(){
+		def('one', function(){echo 1;});
+		def('two', function(){echo 2;});
+		def('three', function(){echo 3;});
+		def_printfer('hello', 'Hello, %s');
+	});
+
+foo\bar\baz\one();
+foo\bar\baz\two();
+foo\bar\baz\three();
+foo\bar\baz\hello('waserd');
+---
+123Hello, waserd
+
+</code></pre>
+<hr><h1>signals</h1>
+<h2>basic-noise.php</h2>
+<pre><code class='php'>&lt;?php
+def_printfer('p', &quot;%s\n&quot;);
+p(1);
+noise('warning');
+p(2);
+catcher('warning', function(){ echo &quot;warning!\n&quot;; });
+noise('warning');
+p(3);
+?&gt;
+---
+1
+2
+warning!
+3
+</code></pre>
+<h2>catched-signal.php</h2>
+<pre><code class='php'>&lt;?php
+catcher('warning', function(){ echo &quot;catched&quot;; });
+signal(&quot;warning&quot;);
+---
+catched
+</code></pre>
+<h2>catcher-redefine.php</h2>
+<pre><code class='php'>&lt;?php
+def_printfer('p', &quot;%s\n&quot;);
+p(1);
+catcher('warning', function(){ echo &quot;warning!\n&quot;; });
+noise('warning');
+p(2);
+catcher('warning', function(){ echo &quot;error!\n&quot;; });
+noise('warning');
+p(3);
+?&gt;
+---
+1
+warning!
+2
+error!
+3
+</code></pre>
+<h2>noise-with-args.php</h2>
+<pre><code class='php'>&lt;?php
+catcher('warning', function($one, $two, $three){
+	echo $one.$two.$three;
+});
+noise('warning', 1,2,3);
+?&gt;
+---
+123
+</code></pre>
+<h2>uncatched-signal.php</h2>
+<pre><code class='php'>&lt;?php
+try{
+	signal(&quot;warning&quot;);
+}catch(bu\def\UncatchedSignalException $e){
+	echo &quot;catched&quot;;
+}
+?&gt;
+---
+catched
+</code></pre>
+</body></html>
